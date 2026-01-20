@@ -1,18 +1,19 @@
 <header class="p-3 w-full fixed top-0 z-50 bg-gradient-to-r from-primary to-black">
-    <div class="flex align-middle items-center px-10 mx-auto gap-6">
-        <a routerLink="/" class="flex items-center gap-3 max-h-16 text-white border-r-white border-r-2 pr-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+    <div class="flex  align-middle items-center px-10 mx-auto gap-6 text-white">
+        <a routerLink="/" routerLinkActive="text-accent" [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 max-h-16 border-r-white border-r-2 pr-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-7">
                 <path fill-rule="evenodd"
                     d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
                     clip-rule="evenodd" />
             </svg>
-            <h3 class="text-3xl font-semibold uppercase text-white">Dating app</h3>
+            <h3 class="text-3xl font-semibold uppercase">Dating app</h3>
 
         </a>
         <nav class="flex gap-3 my-2 uppercase text-lg text-white">
-            <a class="hover:text-gray-300" routerLink="/members">Matches</a>
-            <a class="hover:text-gray-300" routerLink="/lists">Lists</a>
-            <a class="hover:text-gray-300" routerLink="/messages">Messages</a>
+            <a class="hover:text-gray-300" routerLink="/members" routerLinkActive="text-accent">Matches</a>
+            <a class="hover:text-gray-300" routerLink="/lists" routerLinkActive="text-accent">Lists</a>
+            <a class="hover:text-gray-300" routerLink="/messages" routerLinkActive="text-accent">Messages</a>
         </nav>
         <div class="flex gap-4 ml-auto">
             @if (account.currentUser(); as user) {
