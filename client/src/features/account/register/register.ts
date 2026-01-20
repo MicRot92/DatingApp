@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RegisterCreds } from '../../../Types/user';
+import { RegisterCreds, User } from '../../../Types/user';
 
 @Component({
   selector: 'app-register',
@@ -9,6 +9,8 @@ import { RegisterCreds } from '../../../Types/user';
   styleUrl: './register.css',
 })
 export class Register {
+
+  cancledRegister = output<boolean>();
   protected creds = {} as RegisterCreds;
 
   register() {
@@ -19,5 +21,6 @@ export class Register {
   cancel() {
     console.log('Registration cancelled');
     // Implement cancellation logic here
+    this.cancledRegister.emit(false);
   }
 }
