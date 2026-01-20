@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,8 +13,24 @@ builder.Services.AddDbContext<API.Data.AppDbContext>(options =>
 });
 
 builder.Services.AddCors();
+builder.Services.AddScoped<API.Interfaces.ITokenService, API.Services.TokenService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var tokenKey = builder.Configuration["TokenKey"] ?? throw new Exception("TokenKey is not configured");
+        if (tokenKey.Length < 64)
+        {
+            throw new Exception("TokenKey must be at least 64 characters long");
+        }
 
-
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 var app = builder.Build();
 
@@ -20,6 +39,9 @@ app.UseCors(policy =>
     policy.AllowAnyOrigin()
           .AllowAnyMethod()
           .AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
