@@ -26,14 +26,7 @@ export class App implements OnInit {
   }
 
   setCurrentUser() {
-    const userJson = localStorage.getItem('user');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      this.accountService.currentUser.set(user);
-      return user;
-    } else {
-      return null;
-    }
+
   }
 
   async getMembers() {
