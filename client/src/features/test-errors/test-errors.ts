@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 @Component({
   selector: 'app-test-errors',
@@ -9,7 +9,7 @@ import { Component, inject } from '@angular/core';
 })
 export class TestErrors {
   private http = inject(HttpClient);
-
+  validationErrors = signal<string[]>([]);
   protected get404Error() {
     this.http.get('https://localhost:5001/api/buggy/not-found').subscribe({
       next: (response) => {
@@ -26,6 +26,8 @@ export class TestErrors {
         console.log(response);
       },
       error: (error) => {
+        console.log('Setting validation errors');
+        this.validationErrors.set(error);
         console.log(error);
       },
     });
@@ -52,7 +54,19 @@ export class TestErrors {
         console.log(error);
       },
     });
+  }
 
 
+  protected get400ValidationError() {
+    this.http.post('https://localhost:5001/api/account/register', {}).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log('Setting validation errors');
+        this.validationErrors.set(error);
+        console.log(error);
+      },
+    });
   }
 }
