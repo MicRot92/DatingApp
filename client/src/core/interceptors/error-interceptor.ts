@@ -1,0 +1,39 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { ToastService } from '../services/toast-service';
+import { Router } from '@angular/router';
+
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const toast = inject(ToastService);
+  const router = inject(Router);
+
+
+  return next(req).pipe(
+
+    catchError((error) => {
+      console.log('Error Interceptor:', error);
+      if (error) {
+        switch (error.status) {
+          case 400:
+            toast.error('Bad Request from interceptor');
+            break;
+          case 401:
+            toast.error('Unauthorized from interceptor');
+            break;
+          case 404:
+            router.navigateByUrl('/not-found');
+            break;
+          case 500:
+            router.navigateByUrl('/server-error', { state: { error: error.error } });
+            break;
+          default:
+            toast.error('Something unexpected went wrong');
+            console.error(error);
+            break;
+        }
+      }
+      return throwError(() => error);
+    })
+  );
+};
