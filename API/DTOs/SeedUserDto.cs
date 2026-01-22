@@ -1,12 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Humanizer;
+using API.Entities;
 
-namespace API.Entities;
+namespace API.DTOs;
 
-public class Member
+public class SeedUserDto
 {
-    public string Id { get; set; } = null!;
+    public required string Id { get; set; }
+    public required string Email { get; set; }
     public DateOnly DateOfBirth { get; set; }
 
     public string? ImageUrl { get; set; }
@@ -25,9 +26,6 @@ public class Member
 
     public required string Country { get; set; }
 
-    public List<Photo> Photos { get; set; } = [];
-
     [ForeignKey(nameof(Id))]
     public AppUser User { get; set; } = null!;
-
 }
