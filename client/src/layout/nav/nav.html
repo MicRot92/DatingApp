@@ -22,7 +22,7 @@
             @if (account.currentUser(); as user) {
             <div class="dropdown dropdown-end text-black">
                 <div tabindex="0" role="button" class="flex items-center text-black text-xl gap-3 cursor-pointer m-1">
-                    <img src="/user.png" alt="user avatar" class="w-8 h-8 rounded-2xl" />
+                    <img [src]="user.photoUrl || '/user.png'" alt="user avatar" class="w-8 h-8 rounded-2xl" />
                     <span>{{ user.displayName }}</span>
                 </div>
                 <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
