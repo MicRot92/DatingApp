@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { LoginCreds, RegisterCreds, User } from '../../Types/user';
 import { tap } from 'rxjs/internal/operators/tap';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AccountService {
   private http = inject(HttpClient);
   currentUser = signal<User | null>(null);
 
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds) {
     console.log('AccountService register called with creds:', creds);
@@ -30,8 +31,9 @@ export class AccountService {
       tap((user) => {
         if (user) {
           this.setCurrentUser(user);
+          console.log('UserPhoto', user.photoUrl);
         }
-        console.log('User logged in:', user);
+        console.log('User logged in X:', user);
       })
     );
   }
