@@ -6,7 +6,7 @@ export type Member = {
     created: string
     lastActive: string
     gender: string
-    desciprtion?: string
+    description?: string
     city: string
     country: string
 }

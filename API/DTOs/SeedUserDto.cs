@@ -20,7 +20,7 @@ public class SeedUserDto
 
     public required string Gender { get; set; }
 
-    public string? Desciprtion { get; set; }
+    public string? Description { get; set; }
 
     public required string City { get; set; }
 

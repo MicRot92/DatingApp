@@ -23,7 +23,7 @@ public class Seed
 
         foreach (var member in members)
         {
-            using var hmac = new HMACSHA512();  
+            using var hmac = new HMACSHA512();
             var user = new AppUser
             {
                 Id = member.Id,
@@ -43,6 +43,7 @@ public class Seed
                     Gender = member.Gender,
                     Country = member.Country,
                     City = member.City,
+                    Description = member.Description
                 }
             };
             user.Member.Photos.Add(new Photo
