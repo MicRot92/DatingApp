@@ -12,8 +12,9 @@
         </a>
         <nav class="flex gap-3 my-2 uppercase text-lg text-white">
             @if (account.currentUser()) {
-            <a class=" hover:text-gray-300" routerLink="/members" routerLinkActive="text-accent">Matches</a>
-            <a class="hover:text-gray-300" routerLink="/lists" routerLinkActive="text-accent">Lists</a>
+            <a class=" hover:text-gray-300" routerLink="/members" routerLinkActive="text-accent"
+                [routerLinkActiveOptions]="{ exact: true }">Matches</a>
+            <a class=" hover:text-gray-300" routerLink="/lists" routerLinkActive="text-accent">Lists</a>
             <a class="hover:text-gray-300" routerLink="/messages" routerLinkActive="text-accent">Messages</a>
             }
             <a class="hover:text-gray-300" routerLink="/errors" routerLinkActive="text-accent">Errors</a>
