@@ -38,4 +38,5 @@ export class Nav {
     this.router.navigateByUrl('/');
   }
 
+  
 }

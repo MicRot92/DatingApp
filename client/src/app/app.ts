@@ -18,6 +18,7 @@ export class App implements OnInit {
 
   async ngOnInit() {
     this.members.set(await this.getMembers());
+    document.documentElement.setAttribute('data-theme', 'bumblebee')
   }
 
   async getMembers() {
