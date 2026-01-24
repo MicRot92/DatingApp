@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../../Types/member';
+import { resetConsumerBeforeComputation } from '@angular/core/primitives/signals';
+import { Photo } from '../../Types/photo';
 
 
 @Injectable({
@@ -19,5 +21,8 @@ export class MemberService {
     return this.http.get<Member>(this.baseUrl + 'members/' + username);
   }
 
+  getMemberPhotos(id: string) {
+    return this.http.get<Photo[]>(this.baseUrl + 'members/' + id + '/photos')
+  }
 
 } 
