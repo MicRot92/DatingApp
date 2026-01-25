@@ -1,9 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild, viewChild } from '@angular/core';
 import { InjectSetupWrapper } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { single } from 'rxjs';
-import { Member } from '../../../Types/member';
+import { EditableMember, Member } from '../../../Types/member';
 import { DatePipe } from '@angular/common';
+import { MemberService } from '../../../core/services/member-service';
+import { NgForm } from '@angular/forms';
+import { ToastService } from '../../../core/services/toast-service';
 
 @Component({
   selector: 'app-member-profile',
@@ -11,15 +14,41 @@ import { DatePipe } from '@angular/common';
   templateUrl: './member-profile.html',
   styleUrl: './member-profile.css',
 })
-export class MemberProfile {
+export class MemberProfile implements OnInit, OnDestroy {
+  @ViewChild('editForm') editForm?: NgForm
   private route = inject(ActivatedRoute);
   protected member = signal<Member | undefined>(undefined)
+  protected editableMember?: EditableMember;
+  protected memberService = inject(MemberService);
+  private toastService = inject(ToastService);
+
+
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(
       data => { this.member.set(data['memberResolver']); }
     )
+
+    this.editableMember = {
+      displayName: this.member()?.displayName || '',
+      description: this.member()?.description || '',
+      country: this.member()?.country || '',
+      city: this.member()?.city || '',
+
+    }
     console.log('user info', this.member());
 
+  }
+
+  ngOnDestroy(): void {
+    this.memberService.editMode.set(false);
+  }
+
+  updateProfile() {
+    if (!this.member()) return;
+    const updatedMember = { ...this.member(), ...this.editableMember }
+    console.log('updated member', updatedMember)
+    this.toastService.success('user updated');
+    this.memberService.editMode.set(false);
   }
 }

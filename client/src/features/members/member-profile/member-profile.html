@@ -10,8 +10,15 @@
         <span class="font-semibold">Last Active: </span>
         <span> {{member.lastActive | date: 'short'}}</span>
     </div>
+
+    @if(memberService.editMode())
+    {
+    <div>Form goes here </div>
+    }@else
+    {
     <h3 class="text-lg font-semibold text-primary">About {{member.displayName}}</h3>
     <div> {{member.description}}</div>
+    }
 </div>
 
 }
