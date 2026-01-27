@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { ToastService } from '../../core/services/toast-service';
+import { BusyService } from '../../core/services/busy-service';
 
 @Component({
   selector: 'app-nav',
@@ -12,6 +13,7 @@ import { ToastService } from '../../core/services/toast-service';
 })
 export class Nav {
   protected account = inject(AccountService);
+  protected busyService = inject(BusyService);
   private router = inject(Router)
   private toast = inject(ToastService);
 
@@ -38,5 +40,5 @@ export class Nav {
     this.router.navigateByUrl('/');
   }
 
-  
+
 }

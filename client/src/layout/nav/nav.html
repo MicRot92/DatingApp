@@ -19,6 +19,15 @@
             }
             <a class="hover:text-gray-300" routerLink="/errors" routerLinkActive="text-accent">Errors</a>
         </nav>
+
+        @if (busyService.busyRequestCount() > 0) {
+
+        <span class="loading loading-spinner border-white  text-black" role="status" aria-live="polite">
+            <span class="sr-only">Loading...</span>
+        </span>
+        }
+
+
         <div class="flex gap-4 ml-auto">
             @if (account.currentUser(); as user) {
             <div class="dropdown dropdown-end text-black">
@@ -48,3 +57,7 @@
 
     </div>
 </header>
+
+<div class="loading-spinner">
+    <div class="spinner"></div>
+</div>
