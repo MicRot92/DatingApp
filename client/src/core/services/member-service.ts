@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { EditableMember, Member } from '../../Types/member';
 import { resetConsumerBeforeComputation } from '@angular/core/primitives/signals';
 import { Photo } from '../../Types/photo';
+import { tap } from 'rxjs';
 
 
 @Injectable({
@@ -21,7 +22,11 @@ export class MemberService {
   }
 
   getMember(username: string) {
-    return this.http.get<Member>(this.baseUrl + 'members/' + username);
+    return this.http.get<Member>(this.baseUrl + 'members/' + username).pipe(
+      tap(member => {
+        this.member.set(member);
+      })
+    )
   }
 
   getMemberPhotos(id: string) {

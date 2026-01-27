@@ -7,6 +7,8 @@ import { DatePipe } from '@angular/common';
 import { MemberService } from '../../../core/services/member-service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ToastService } from '../../../core/services/toast-service';
+import { AccountService } from '../../../core/services/account-service';
+import { User } from '../../../Types/user';
 
 @Component({
   selector: 'app-member-profile',
@@ -21,8 +23,7 @@ export class MemberProfile implements OnInit, OnDestroy {
       $event.preventDefault();
     }
   }
-  private route = inject(ActivatedRoute);
-  protected member = signal<Member | undefined>(undefined)
+  private accountService = inject(AccountService);
   protected memberService = inject(MemberService);
   private toastService = inject(ToastService);
   protected editableMember: EditableMember =
@@ -34,18 +35,15 @@ export class MemberProfile implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(
-      data => { this.member.set(data['memberResolver']); }
-    )
 
     this.editableMember = {
-      displayName: this.member()?.displayName || '',
-      description: this.member()?.description || '',
-      country: this.member()?.country || '',
-      city: this.member()?.city || '',
+      displayName: this.memberService.member()?.displayName || '',
+      description: this.memberService.member()?.description || '',
+      country: this.memberService.member()?.country || '',
+      city: this.memberService.member()?.city || '',
     }
 
-    console.log('user info', this.member());
+    console.log('user info', this.memberService.member());
   }
 
   ngOnDestroy(): void {
@@ -53,20 +51,25 @@ export class MemberProfile implements OnInit, OnDestroy {
   }
 
   updateProfile() {
-    if (!this.member()) return;
-    const updatedMember = { ...this.member(), ...this.editableMember }
+    if (!this.memberService.member()) return;
+    const updatedMember = { ...this.memberService.member(), ...this.editableMember }
     this.memberService.updateMember(this.editableMember).subscribe(
       {
         next: () => {
-          this.toastService.success('Profile updated successfully');
+          const currentUser = this.accountService.currentUser();
+          if (currentUser && updatedMember.displayName != currentUser?.displayName) {
+            currentUser.displayName = updatedMember.displayName;
+            console.log('new name ', currentUser.displayName)
+            this.accountService.setCurrentUser(currentUser);
+          }
           this.memberService.editMode.set(false);
+          this.memberService.member.set(updatedMember as Member);
           this.editForm?.reset(updatedMember);
+          console.log('updated member', updatedMember)
+          this.toastService.success('Profile updated successfully');
         }
       }
     )
 
-    console.log('updated member', updatedMember)
-    this.toastService.success('user updated');
-    this.memberService.editMode.set(false);
   }
 }
