@@ -46,7 +46,6 @@ export class MemberProfile implements OnInit, OnDestroy {
     }
 
     console.log('user info', this.member());
-
   }
 
   ngOnDestroy(): void {
@@ -56,6 +55,16 @@ export class MemberProfile implements OnInit, OnDestroy {
   updateProfile() {
     if (!this.member()) return;
     const updatedMember = { ...this.member(), ...this.editableMember }
+    this.memberService.updateMember(this.editableMember).subscribe(
+      {
+        next: () => {
+          this.toastService.success('Profile updated successfully');
+          this.memberService.editMode.set(false);
+          this.editForm?.reset(updatedMember);
+        }
+      }
+    )
+
     console.log('updated member', updatedMember)
     this.toastService.success('user updated');
     this.memberService.editMode.set(false);

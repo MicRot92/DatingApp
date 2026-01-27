@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Member } from '../../Types/member';
+import { EditableMember, Member } from '../../Types/member';
 import { resetConsumerBeforeComputation } from '@angular/core/primitives/signals';
 import { Photo } from '../../Types/photo';
 
@@ -13,6 +13,8 @@ export class MemberService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
   editMode = signal(false);
+  member = signal<Member | null>(null);
+
 
   getMembers() {
     return this.http.get<Member[]>(this.baseUrl + 'members');
@@ -24,6 +26,11 @@ export class MemberService {
 
   getMemberPhotos(id: string) {
     return this.http.get<Photo[]>(this.baseUrl + 'members/' + id + '/photos')
+  }
+
+  updateMember(member: EditableMember) {
+    return this.http.put(this.baseUrl + 'members', member)
+
   }
 
 } 
