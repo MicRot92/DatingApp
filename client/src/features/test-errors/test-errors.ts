@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-test-errors',
@@ -10,8 +11,9 @@ import { Component, inject, signal } from '@angular/core';
 export class TestErrors {
   private http = inject(HttpClient);
   validationErrors = signal<string[]>([]);
+  baseUrl = environment.apiUrl
   protected get404Error() {
-    this.http.get('https://localhost:5001/api/buggy/not-found').subscribe({
+    this.http.get(this.baseUrl + '/buggy/not-found').subscribe({
       next: (response) => {
         console.log(response);
       },
@@ -21,7 +23,7 @@ export class TestErrors {
     });
   }
   protected get400Error() {
-    this.http.get('https://localhost:5001/api/buggy/bad-request').subscribe({
+    this.http.get(this.baseUrl + '/buggy/bad-request').subscribe({
       next: (response) => {
         console.log(response);
       },
@@ -35,7 +37,7 @@ export class TestErrors {
   }
 
   protected get500Error() {
-    this.http.get('https://localhost:5001/api/buggy/server-error').subscribe({
+    this.http.get(this.baseUrl + '/buggy/server-error').subscribe({
       next: (response) => {
         console.log(response);
       },
@@ -46,7 +48,7 @@ export class TestErrors {
   }
 
   protected get401Error() {
-    this.http.get('https://localhost:5001/api/buggy/auth').subscribe({
+    this.http.get(this.baseUrl + '/buggy/auth').subscribe({
       next: (response) => {
         console.log(response);
       },
@@ -58,7 +60,7 @@ export class TestErrors {
 
 
   protected get400ValidationError() {
-    this.http.post('https://localhost:5001/api/account/register', {}).subscribe({
+    this.http.post(this.baseUrl + '/account/register', {}).subscribe({
       next: (response) => {
         console.log(response);
       },
