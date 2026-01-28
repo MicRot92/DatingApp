@@ -1,5 +1,7 @@
 using System.Text;
+using API.Helpers;
 using API.Middleware;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +18,8 @@ builder.Services.AddDbContext<API.Data.AppDbContext>(options =>
 builder.Services.AddCors();
 builder.Services.AddScoped<API.Interfaces.ITokenService, API.Services.TokenService>();
 builder.Services.AddScoped<API.Interfaces.IMemberRepository, API.Data.MemberRepository>();
-
+builder.Services.AddScoped<API.Interfaces.IPhotoService, API.Services.PhotoService>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

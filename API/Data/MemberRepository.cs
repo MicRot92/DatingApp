@@ -39,8 +39,11 @@ public class MemberRepository : IMemberRepository
         return await _context.Photos.Where(p => p.MemberId == memberId).ToListAsync();
     }
 
-    public async Task<Member?> GetMemberForUpdate(string id)
+    public async Task<Member?> GetMemberForUpdateAsync(string id)
     {
-        return await _context.Members.Include(u => u.User).SingleOrDefaultAsync(m => m.Id == id);
+        return await _context.Members
+        .Include(u => u.User)
+        .Include(m => m.Photos)
+        .SingleOrDefaultAsync(m => m.Id == id);
     }
 }

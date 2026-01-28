@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    public class MembersController(IMemberRepository memberRepository) : BaseAPIController
+    public class MembersController(IMemberRepository memberRepository, IPhotoService photoService) : BaseAPIController
     {
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
@@ -42,7 +42,7 @@ namespace API.Controllers
         {
             var memberId = User.GetMemberId();
 
-            var member = await memberRepository.GetMemberForUpdate(memberId);
+            var member = await memberRepository.GetMemberForUpdateAsync(memberId);
             if (member == null) return BadRequest("Could not get a member");
 
             member.DisplayName = memberUpdateDto.DisplayName ?? member.DisplayName;
@@ -59,6 +59,47 @@ namespace API.Controllers
             {
                 return BadRequest("Failed to update user");
             }
+        }
+
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<Photo>> AddPhoto(IFormFile file)
+        {
+            var memberId = User.GetMemberId();
+            var member = await memberRepository.GetMemberForUpdateAsync(memberId);
+
+            if (member == null) return BadRequest("Could not get member");
+
+            var result = await photoService.AddPhotoAsync(file);
+
+            if (result.Error != null) return BadRequest(result.Error.Message);
+
+            var photo = new Photo
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId,
+                MemberId = member.Id
+            };
+
+            if (member.ImageUrl == null)
+            {
+                member.ImageUrl = photo.Url;
+                member.User.ImageUrl = photo.Url;
+            }
+
+            member.Photos.Add(photo);
+
+            if (await memberRepository.SaveAllAsync())
+            {
+                var photoToReturn = new Photo
+                {
+                    Id = photo.Id,
+                    Url = photo.Url,
+                    PublicId = photo.PublicId
+                };
+                return CreatedAtAction(nameof(GetMember), new { id = memberId }, photoToReturn);
+            }
+
+            return BadRequest("Problem adding photo");
         }
     }
 }
