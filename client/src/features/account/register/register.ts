@@ -3,14 +3,16 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { RegisterCreds, User } from '../../../Types/user';
 import { AccountService } from '../../../core/services/account-service';
 import { JsonPipe } from '@angular/common';
+import { TextInput } from "../../../shared/text-input/text-input";
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    JsonPipe
-  ],
+    JsonPipe,
+    TextInput
+],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

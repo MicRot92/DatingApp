@@ -3,27 +3,17 @@
     <div class="card-body w-full"></div>
     <form (ngSubmit)="register()" [formGroup]="registerForm">
         <div class="mb-4">
-            <label for="username" class="block text-sm font-medium mb-1">Username</label>
-            <input
-                [class.input-error]="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
-                type="text" id="username" formControlName="username" required class="input input-bordered w-full">
-            @if (registerForm.controls['username'].invalid && registerForm.controls['username'].touched) {
-            <p class="text-error text-xs mt-1">Username is required.</p>
-            }
+            <app-text-input label="Username" formControlName="username"> </app-text-input>
         </div>
         <div class="mb-4">
-            <label for="email" class="block text-sm font-medium mb-1">Email</label>
-            <input type="email" id="email" formControlName="email" required class="input input-bordered w-full">
+            <app-text-input label="Email" formControlName="email"> </app-text-input>
         </div>
         <div class="mb-4">
-            <label for="password" class="block text-sm font-medium mb-1">Password</label>
-            <input type="password" id="password" formControlName="password" required
-                class="input input-bordered w-full">
+            <app-text-input label="Password" formControlName="password" type="password"> </app-text-input>
         </div>
         <div class="mb-4">
-            <label for="confirmPassword" class="block text-sm font-medium mb-1">Confirm Password</label>
-            <input type="password" id="confirmPassword" formControlName="confirmPassword" required
-                class="input input-bordered w-full">
+            <app-text-input label="Confirm Password" formControlName="confirmPassword" type="password">
+            </app-text-input>
         </div>
 
         <button [disabled]="registerForm.invalid" type="submit" class="btn btn-primary mr-2">Register</button>
