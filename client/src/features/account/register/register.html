@@ -1,23 +1,39 @@
 <div class="card bg-base-100  max-w-xl mx-auto flex flex-col p-6 rounded-lg shadow-lg">
     <div class="card-title justify-center text-3xl text-primary">Register</div>
     <div class="card-body w-full"></div>
-    <form (ngSubmit)="register()" #f="ngForm">
+    <form (ngSubmit)="register()" [formGroup]="registerForm">
         <div class="mb-4">
             <label for="username" class="block text-sm font-medium mb-1">Username</label>
-            <input type="text" id="username" [(ngModel)]="creds.displayName" name="username" required
-                class="input input-bordered w-full">
+            <input
+                [class.input-error]="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
+                type="text" id="username" formControlName="username" required class="input input-bordered w-full">
+            @if (registerForm.controls['username'].invalid && registerForm.controls['username'].touched) {
+            <p class="text-error text-xs mt-1">Username is required.</p>
+            }
         </div>
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium mb-1">Email</label>
-            <input type="email" id="email" [(ngModel)]="creds.email" name="email" required
-                class="input input-bordered w-full">
+            <input type="email" id="email" formControlName="email" required class="input input-bordered w-full">
         </div>
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium mb-1">Password</label>
-            <input type="password" id="password" [(ngModel)]="creds.password" name="password" required
+            <input type="password" id="password" formControlName="password" required
                 class="input input-bordered w-full">
         </div>
-        <button type="submit" class="btn btn-primary mr-2">Register</button>
+        <div class="mb-4">
+            <label for="confirmPassword" class="block text-sm font-medium mb-1">Confirm Password</label>
+            <input type="password" id="confirmPassword" formControlName="confirmPassword" required
+                class="input input-bordered w-full">
+        </div>
+
+        <button [disabled]="registerForm.invalid" type="submit" class="btn btn-primary mr-2">Register</button>
         <button type="button" (click)="cancel()" class="btn btn-secondary">Cancel</button>
     </form>
+
+    <div class="flex flex-col items-start mt-10 px-5 w-full mockup-code text-sm">
+        <div>Form Value: {{ registerForm.value | json }}</div>
+        <div>Form Status: {{ registerForm.status | json }}</div>
+
+    </div>
+
 </div>
