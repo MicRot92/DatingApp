@@ -6,16 +6,17 @@ import { ImageUpload } from "../../../shared/image-upload/image-upload";
 import { AccountService } from '../../../core/services/account-service';
 import { Member } from '../../../Types/member';
 import { StarButton } from "../../../shared/star-button/star-button";
+import { DeleteButton } from "../../../shared/delete-button/delete-button";
 
 @Component({
   selector: 'app-member-photos',
-  imports: [ImageUpload, StarButton],
+  imports: [ImageUpload, StarButton, DeleteButton],
   templateUrl: './member-photos.html',
   styleUrl: './member-photos.css',
 })
 export class MemberPhotos implements OnInit {
   protected memberService = inject(MemberService);
-  private accountService = inject(AccountService);
+  protected accountService = inject(AccountService);
   private route = inject(ActivatedRoute);
   protected photos = signal<Photo[]>([]);
   protected loading = signal(false);
@@ -52,6 +53,7 @@ export class MemberPhotos implements OnInit {
   }
 
   setMainPhoto(photo: Photo) {
+    console.log('Setting main photo:', photo);
     this.memberService.setMainPhoto(photo).subscribe({
 
       next: () => {
@@ -69,6 +71,14 @@ export class MemberPhotos implements OnInit {
       }
     });
   };
+
+  deletePhoto(photoId: number) {
+    this.memberService.deletePhoto(photoId).subscribe({
+      next: () => {
+        console.log('Photo deleted successfully');
+        this.photos.update(photos => photos.filter(p => p.id !== photoId));
+      }
+    });
+
+  }
 }
-
-

@@ -9,9 +9,17 @@
     {
     <div class="relative">
         <img src="{{photo.url}}" alt="photo of member" class="w-full rounded-lg">
+
+        @if (this.accountService.currentUser()?.id === memberService.member()?.id) {
+
         <app-star-button [disabled]="photo.url === memberService.member()?.imageUrl"
             [selected]="photo.url === memberService.member()?.imageUrl"
             (clickEvent)="setMainPhoto(photo)"></app-star-button>
+
+        <app-delete-button [disabled]="photo.url === memberService.member()?.imageUrl"
+            (clickEvent)="deletePhoto(photo.id)"></app-delete-button>
+        }
+
     </div>
     }
 </div>
