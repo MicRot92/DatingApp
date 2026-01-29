@@ -12,8 +12,9 @@ export class StarButton {
   clickEvent = output<Event>();
 
   onClick(event: Event) {
-    if (!this.disabled) {
-      // this.selected.set(!this.selected());
+    console.log('StarButton clicked. Disabled:', this.disabled(), 'Selected:', this.selected());
+    if (!this.disabled()) {
+      console.log('Emitting click event');
       this.clickEvent.emit(event);
     }
   }
