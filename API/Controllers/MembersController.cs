@@ -2,6 +2,7 @@ using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,9 @@ namespace API.Controllers
     public class MembersController(IMemberRepository memberRepository, IPhotoService photoService) : BaseAPIController
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
+        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] PagingParams pagingParams)
         {
-            var members = await memberRepository.GetMembersAsync();
+            var members = await memberRepository.GetMembersAsync(pagingParams);
             return Ok(members);
         }
         [Authorize]
@@ -132,7 +133,7 @@ namespace API.Controllers
             var member = await memberRepository.GetMemberForUpdateAsync(memberId);
 
             if (member == null) return BadRequest("Could not get member");
- 
+
             var photo = member.Photos.FirstOrDefault(x => x.Id == photoId);
 
             if (photo == null) return NotFound("Could not find photo");
