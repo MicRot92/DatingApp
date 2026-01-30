@@ -38,6 +38,24 @@ export class MemberPhotos implements OnInit {
         this.loading.set(false);
         this.memberService.editMode.set(false);
         this.photos.update(photos => [...photos, photo]);
+
+        // If this is the first photo, update the member's imageUrl and user's photoUrl
+        if (this.photos().length === 1) {
+          // Update member's imageUrl in the member service
+          this.memberService.member.update(member => ({
+            ...member,
+            imageUrl: photo.url
+          }) as Member);
+
+          // Update current user's photoUrl in account service and localStorage
+          const currentUser = this.accountService.currentUser();
+          if (currentUser) {
+            this.accountService.setCurrentUser({
+              ...currentUser,
+              photoUrl: photo.url
+            });
+          }
+        }
       },
       error: (error) => {
         console.error('Error uploading photo:', error);
