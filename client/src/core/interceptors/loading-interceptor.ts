@@ -12,7 +12,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   busyService.busy();
   return next(req).pipe(
     // Remove delay for now - add it back later if needed
-    // delay(2000),
+    delay(2000),
     // Remove caching - it's interfering with pagination
     // tap(response => {
     //   cache.set(req.urlWithParams, response);

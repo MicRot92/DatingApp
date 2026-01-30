@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MemberService } from '../../../core/services/member-service';
 import { Observable } from 'rxjs';
 import { Member } from '../../../Types/member';
@@ -13,25 +13,25 @@ import { Paginator } from "../../../shared/paginator/paginator";
   templateUrl: './members-list.html',
   styleUrl: './members-list.css',
 })
-export class MembersList {
+export class MembersList implements OnInit {
 
 
   private membersService = inject(MemberService);
 
-  protected paginatedMembers$?: Observable<PaginatedResult<Member>>;
+  protected paginatedMembers = signal<PaginatedResult<Member> | null>(null);
 
   pageNumber = 1;
   pageSize = 5;
-  /**
-   *
-   */
-  constructor() {
+
+  ngOnInit(): void {
     this.loadMembers();
   }
 
 
   loadMembers() {
-    this.paginatedMembers$ = this.membersService.getMembers(this.pageNumber, this.pageSize);
+    this.membersService.getMembers(this.pageNumber, this.pageSize).subscribe(result => {
+      this.paginatedMembers.set(result);
+    });
   }
 
   onPageChange(event: { pageNumber: number; pageSize: number }) {
