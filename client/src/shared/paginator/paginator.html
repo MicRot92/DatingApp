@@ -10,8 +10,9 @@
         Member {{(pageNumber() -1)*pageSize() + 1}} - {{lastItemIndex()}} of {{totalItems()}}
     </div>
 
-    <div class="btn-group ml-auto">
+    <div class="btn-group">
         <button (click)="onPageChange(pageNumber() - 1)" [disabled]="pageNumber() === 1" class="btn">Previous</button>
         <button (click)="onPageChange(pageNumber() + 1)" [disabled]="pageNumber() * pageSize() >= totalItems()"
             class="btn">Next</button>
     </div>
+</div>
