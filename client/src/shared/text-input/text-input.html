@@ -1,6 +1,7 @@
 <label for="username" class="block text-sm font-medium mb-1">{{label()}}</label>
 <input [class.input-error]="control.invalid && control.touched" [class.input-success]="control.valid && control.touched"
-    [type]="type()" id="username" [placeholder]="label()" [formControl]="control" class="input input-bordered w-full">
+    [type]="type()" [max]="maxDate()" id="username" [placeholder]="label()" [formControl]="control"
+    class="input input-bordered w-full">
 @if (control.hasError('required') && control.touched) {
 <p class="text-error text-xs mt-1">{{label()}} is required.</p>
 }
