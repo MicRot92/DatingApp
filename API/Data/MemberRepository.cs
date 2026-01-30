@@ -29,10 +29,22 @@ public class MemberRepository : IMemberRepository
     {
         return await _context.Members.ToListAsync();
     }
-    public Task<PaginatedResult<Member>> GetMembersAsync(PagingParams pagingParams)
+    public Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams)
     {
         var query = _context.Members.AsQueryable();
-        return PagingHelper.CreateAsync(query, pagingParams.PageNumber, pagingParams.PageSize);
+        query = query.Where(m => m.Id != memberParams.CurrentMemberId);
+
+        if (memberParams.Gender != null)
+        {
+            query = query.Where(m => m.Gender == memberParams.Gender);
+        }
+
+        var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MaxAge - 1));
+        var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MinAge));
+
+        query = query.Where(m => m.DateOfBirth >= minDob && m.DateOfBirth <= maxDob);
+
+        return PagingHelper.CreateAsync(query, memberParams.PageNumber, memberParams.PageSize);
     }
 
     public async Task<Member?> GetMemberByIdAsync(string id)
