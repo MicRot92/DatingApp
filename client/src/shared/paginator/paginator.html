@@ -1,0 +1,17 @@
+<div class="flex items-center w-full gap-3 py-3">
+    <span>Items per page: </span>
+    <select (change)="onPageChange(undefined,$event.target)" class="select select-bordered w-24">
+        @for (size of pageSizeOptions(); track size) {
+        <option [selected]="size === pageSize()" [value]="size"> {{size}} </option>
+        }
+    </select>
+
+    <div class="text-sm">
+        Member {{(pageNumber() -1)*pageSize() + 1}} - {{lastItemIndex()}} of {{totalItems()}}
+    </div>
+
+    <div class="btn-group ml-auto">
+        <button (click)="onPageChange(pageNumber() - 1)" [disabled]="pageNumber() === 1" class="btn">Previous</button>
+        <button (click)="onPageChange(pageNumber() + 1)" [disabled]="pageNumber() * pageSize() >= totalItems()"
+            class="btn">Next</button>
+    </div>
