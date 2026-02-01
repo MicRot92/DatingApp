@@ -7,6 +7,9 @@
             <button (click)="openModal()" class="btn btn-outline btn-sm">Filter Members</button>
             <button (click)="resetFilters()" class="btn btn-outline btn-sm">Reset Filters</button>
         </div>
+        <div>{{ displaySelectedFilters }}</div>
+
+
         @if (paginatedResult.metadata; as metadata) {
         <app-paginator [pageNumber]="metadata.currentPage" [pageSize]="metadata.pageSize"
             [totalItems]="metadata.totalCount" (pageChange)="onPageChange($event)"> </app-paginator>

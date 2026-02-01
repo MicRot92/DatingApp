@@ -19,6 +19,7 @@ builder.Services.AddCors();
 builder.Services.AddScoped<API.Interfaces.ITokenService, API.Services.TokenService>();
 builder.Services.AddScoped<API.Interfaces.IMemberRepository, API.Data.MemberRepository>();
 builder.Services.AddScoped<API.Interfaces.IPhotoService, API.Services.PhotoService>();
+builder.Services.AddScoped<LogUserActivity>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

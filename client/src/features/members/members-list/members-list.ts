@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MemberService } from '../../../core/services/member-service';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Member, MemberFilterParams } from '../../../Types/member';
 import { AsyncPipe } from '@angular/common';
 import { MemberCard } from "../member-card/member-card";
@@ -22,6 +22,7 @@ export class MembersList implements OnInit {
   protected paginatedMembers = signal<PaginatedResult<Member> | null>(null);
 
   memberFilterParams = new MemberFilterParams();
+  private updatedParams = new MemberFilterParams();
 
   ngOnInit(): void {
     this.loadMembers();
@@ -54,7 +55,8 @@ export class MembersList implements OnInit {
 
   onFilterChange(data: MemberFilterParams) {
     console.log('Received filter data:', data);
-    this.memberFilterParams = data;
+    this.memberFilterParams = { ...data };
+    this.updatedParams = { ...data };
     this.memberFilterParams.pageNumber = 1;
     this.loadMembers();
   }
@@ -63,5 +65,25 @@ export class MembersList implements OnInit {
     this.memberFilterParams = new MemberFilterParams();
     this.loadMembers();
   }
-  // members$ = this.membersService.getMembersList();
+
+  get displaySelectedFilters(): string {
+    const defaultParams = new MemberFilterParams();
+    const filters: string[] = [];
+
+    if (this.updatedParams.gender) {
+      filters.push(`Gender: ${this.updatedParams.gender}`);
+    } else {
+      filters.push(`Gender: All`);
+    }
+
+    if (this.updatedParams.minAge !== defaultParams.minAge || this.updatedParams.maxAge !== defaultParams.maxAge) {
+      filters.push(`Age: ${this.updatedParams.minAge} - ${this.updatedParams.maxAge}`);
+    } else {
+      filters.push(`Age: All`);
+    }
+
+    filters.push(`Order by: ${this.updatedParams.orderBy === 'lastActive' ? 'Last Active' : 'Newest Members'}`);
+
+    return filters.join(', ');
+  }
 }
