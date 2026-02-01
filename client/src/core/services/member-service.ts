@@ -34,7 +34,12 @@ export class MemberService {
       }
     }
 
-    return this.http.get<PaginatedResult<Member>>(this.baseUrl + 'members', { params: params });
+    return this.http.get<PaginatedResult<Member>>(this.baseUrl + 'members', { params: params }).pipe(
+      tap(() => {
+        localStorage.setItem('filters', JSON.stringify(memberParams));
+        // Optionally handle side effects here
+      })
+    );
   }
 
   getMember(username: string) {

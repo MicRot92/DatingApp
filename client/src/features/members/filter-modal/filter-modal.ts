@@ -15,6 +15,17 @@ export class FilterModal {
   submitData = output<MemberFilterParams>();
   memberParams = new MemberFilterParams();
 
+
+  /**
+   *
+   */
+  constructor() {
+    const filters = localStorage.getItem('filters');
+    if (filters) {
+      this.memberParams = JSON.parse(filters);
+    }
+  }
+
   submit() {
     this.submitData.emit(this.memberParams);
     this.close();
