@@ -1,4 +1,4 @@
-import { HttpEvent, HttpInterceptorFn } from '@angular/common/http';
+import { HttpEvent, HttpInterceptorFn, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { finalize } from 'rxjs/internal/operators/finalize';
 import { BusyService } from '../services/busy-service';
@@ -9,14 +9,29 @@ const cache = new Map<string, HttpEvent<unknown>>();
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const busyService = inject(BusyService);
 
+  const generateCacheKey = (url: string, params: HttpParams): string => {
+    const paramString = params.keys()
+      .map(key => `${key}=${params.getAll(key)?.join(',')}`)
+      .join('&');
+    return `${url}?${paramString}`;
+  }
+
+  const cacheKey = generateCacheKey(req.url, req.params);
+
+  if (req.method === 'GET') {
+    const cachedResponse = cache.get(cacheKey);
+    if (cachedResponse) {
+      return of(cachedResponse);
+    }
+
+  }
+
   busyService.busy();
   return next(req).pipe(
-    // Remove delay for now - add it back later if needed
     delay(2000),
-    // Remove caching - it's interfering with pagination
-    // tap(response => {
-    //   cache.set(req.urlWithParams, response);
-    // }),
+    tap(response => {
+      cache.set(cacheKey, response);
+    }),
     finalize(() => busyService.idle())
   );
 };
