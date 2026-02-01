@@ -14,23 +14,41 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<Photo> Photos { get; set; }
 
+    public DbSet<MemberLike> Likes { get; set; }
+
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<MemberLike>()
+            .HasKey(ml => new { ml.sourceMemberId, ml.TargetMemberId });
+
+        modelBuilder.Entity<MemberLike>()
+            .HasOne(ml => ml.SourceMember)
+            .WithMany(m => m.LikedMembers)
+            .HasForeignKey(ml => ml.sourceMemberId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MemberLike>()
+            .HasOne(ml => ml.TargetMember)
+            .WithMany(m => m.LikedByMembers)
+            .HasForeignKey(ml => ml.TargetMemberId)
+            .OnDelete(DeleteBehavior.NoAction);
+
         var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
             d => d.ToUniversalTime(),
             d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
 
 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {   
-                foreach (var property in entityType.GetProperties())
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                 {
-                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                    {
-                        property.SetValueConverter(dateTimeConverter);
-                    }
+                    property.SetValueConverter(dateTimeConverter);
                 }
             }
+        }
     }
 }
