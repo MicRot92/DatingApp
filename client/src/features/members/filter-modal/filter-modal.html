@@ -30,13 +30,12 @@
         </div>
         <p class="py-4">Press ESC key or click the button below to close</p>
         <div class="modal-action">
-            <!-- if there is a button in form, it will close the modal -->
             <button class="btn" (click)="close()">Close</button>
             <button class="btn btn-primary" (click)="submit()">Submit</button>
         </div>
     </div>
 
     <form method="dialog" class="modal-backdrop">
-        <!-- <button (click)="close()" class="btn"></button> -->
+        <button class="cursor-default opacity-0">close</button>
     </form>
 </dialog>
