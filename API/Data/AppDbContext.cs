@@ -21,12 +21,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<MemberLike>()
-            .HasKey(ml => new { ml.sourceMemberId, ml.TargetMemberId });
+            .HasKey(ml => new { ml.SourceMemberId, ml.TargetMemberId });
 
         modelBuilder.Entity<MemberLike>()
             .HasOne(ml => ml.SourceMember)
             .WithMany(m => m.LikedMembers)
-            .HasForeignKey(ml => ml.sourceMemberId)
+            .HasForeignKey(ml => ml.SourceMemberId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<MemberLike>()

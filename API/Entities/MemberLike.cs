@@ -4,7 +4,7 @@ namespace API.Entities;
 
 public class MemberLike
 {
-    public required string sourceMemberId { get; set; }
+    public required string SourceMemberId { get; set; }
 
     public Member SourceMember { get; set; } = null!;
 

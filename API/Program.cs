@@ -1,6 +1,9 @@
 using System.Text;
+using API.Data;
 using API.Helpers;
+using API.Interfaces;
 using API.Middleware;
+using API.Services;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<API.Data.AppDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddCors();
-builder.Services.AddScoped<API.Interfaces.ITokenService, API.Services.TokenService>();
-builder.Services.AddScoped<API.Interfaces.IMemberRepository, API.Data.MemberRepository>();
-builder.Services.AddScoped<API.Interfaces.IPhotoService, API.Services.PhotoService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<ILikesRepository, LikesRepository>();
 builder.Services.AddScoped<LogUserActivity>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
