@@ -53,16 +53,22 @@ public class LikesRepository : ILikesRepository
             case "likedBy":
                 query = query.Where(like => like.TargetMemberId == memberId);
                 return await query.Select(like => like.SourceMember).AsNoTracking().ToListAsync();
-            default: //mutual likes
-                var likeIds = await GetCurrentMemberLikeIdsAsync(memberId);
-                return await query
-                    .Where(like => like.SourceMemberId == memberId && likeIds.Contains(like.TargetMemberId))
-                    .Select(like => like.TargetMember)
+            default: // mutual likes
+                // Get IDs of members that current user has liked
+                var likedByCurrentUser = await _context.Likes
+                    .Where(like => like.SourceMemberId == memberId)
+                    .Select(like => like.TargetMemberId)
+                    .ToListAsync();
+
+                // Get members who liked the current user AND are in the likedByCurrentUser list
+                var result = await _context.Likes
+                    .Where(like => like.TargetMemberId == memberId && likedByCurrentUser.Contains(like.SourceMemberId))
+                    .Select(like => like.SourceMember)
                     .AsNoTracking()
                     .ToListAsync();
 
+                return result;
         }
-
     }
 
     public async Task<bool> SaveAllAsync()
