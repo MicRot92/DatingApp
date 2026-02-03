@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Member } from '../../Types/member';
+import { PaginatedResult } from '../../Types/pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,12 @@ export class LikesService {
     return this.http.post(this.baseUrl + 'likes/' + targetMemberId, {});
   }
 
-  getLikes(predicate: string) {
-    return this.http.get<Member[]>(this.baseUrl + 'likes', { params: { predicate } });
+  getLikes(predicate: string, pageNumber: number = 1, pageSize: number = 10) {
+    let params = new HttpParams();
+    params = params.append('predicate', predicate);
+    params = params.append('pageNumber', pageNumber.toString());
+    params = params.append('pageSize', pageSize.toString());
+    return this.http.get<PaginatedResult<Member>>(this.baseUrl + 'likes', { params: params });
   }
 
   getCurrentMemberLikeIds() {

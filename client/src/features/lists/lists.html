@@ -1,3 +1,10 @@
+<div class="flex justify-end w-full">
+    @if (paginatedMembers()?.metadata; as metadata) {
+    <app-paginator [pageNumber]="metadata.currentPage" [pageSize]="metadata.pageSize" [totalItems]="metadata.totalCount"
+        (pageChange)="onPageChange($event)"> </app-paginator>
+    }
+</div>
+
 <div class="tabs tabs-box tabs-lg w-fit ">
     @for (tab of tabs; track $index) {
     <button role="tab" class="tab" [class.tab-active]="predicate === tab.value" (click)="setPredicate(tab.value)">{{
@@ -7,9 +14,9 @@
 
 </div>
 
-@if (members().length > 0) {
+@if (paginatedMembers()?.items?.length) {
 <div class="grid grid-cols-5 gap-4">
-    @for (member of members(); track member.id) {
+    @for (member of paginatedMembers()?.items; track member.id) {
     <app-member-card [member]="member"></app-member-card>
     }
 </div>
