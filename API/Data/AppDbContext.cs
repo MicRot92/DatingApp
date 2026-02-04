@@ -16,9 +16,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<MemberLike> Likes { get; set; }
 
+    public DbSet<Message> Messages { get; set; }
+
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Message>()
+            .HasOne(x => x.Recipient)
+            .WithMany(x => x.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<MemberLike>()
             .HasKey(ml => new { ml.SourceMemberId, ml.TargetMemberId });
