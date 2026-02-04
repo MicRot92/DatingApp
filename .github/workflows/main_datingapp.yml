@@ -18,6 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up node environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install angular cli and build client
+        run: |
+          npm install -g @angular/cli
+          cd client
+          npm install
+          ng build --configuration production
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:

@@ -15,7 +15,10 @@
             <p class="mb-4">Find your perfect match and connect with amazing people around you.</p>
 
             <div class="items-center gap-3 flex">
+                @if (!accountService.currentUser())
+                {
                 <button (click)="showRegister(true)" class="btn btn-primary">Register</button>
+                }
                 <button class="btn btn-info">Learn More </button>
             </div>
         </div>
